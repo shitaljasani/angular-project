@@ -1,0 +1,943 @@
+<div class="page">
+    <!-- Main Navbar-->
+    <app-header></app-header>
+    <div class="page-content d-flex align-items-stretch"> 
+        <!-- Side Navbar -->
+        <app-menu></app-menu>
+        <div class="content-inner">        
+        <!-- Page Header-->        
+        <header class="page-header">
+            <div class="container-fluid">
+                <h2 class="no-margin-bottom">Item</h2>
+            </div>
+        </header>
+        <div class="breadcrumb-holder container-fluid">
+            <ul class="breadcrumb">
+                <li class="breadcrumb-item"><a>Home</a></li>
+                <li class="breadcrumb-item">Item</li>
+                <li class="breadcrumb-item active">Manage Items</li>
+            </ul>
+        </div>
+        <section class="tables" *ngIf="actionType == 'normal'">   
+        <div class="container-fluid">
+            <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                <div class="card-close">
+                    <button type="submit" title="Add Item" class="btn btn-primary" (click)="openModalAddMerchent(add)" >Add Item</button>            
+                </div>        
+                <div class="card-header d-flex align-items-center">
+                    <h3 class="h4">Manage Item List</h3>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Type</th>
+                            <th>Unit</th>
+                            <th>Returnable Item</th>
+                            <th>Dimension(L,B,H)(CM)</th>
+                            <th>Weight(Kg)</th>
+                            <th>Manufacturer</th>
+                            <th>Brand</th>
+                            <th>Sales information</th>
+                            <th>Selling Price(INR)</th>
+                            <th>Account</th>
+                            <th>Description</th>
+                            <th>Purchase Information</th>
+                            <th>Purchase Price (INR)</th>
+                            <th>Account</th>
+                            <th>Track Inventory</th>
+                            <th>Account</th>                    
+                            <th colspan="3">Action</th>                    
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let manageItem of manageItemList">
+                                <td>{{manageItem.type || '-'}}</td>
+                                <td>{{manageItem.name || '-'}}</td>
+                                <td>{{manageItem.unit || '-'}}</td>
+                                <td>
+                                    <!-- (click)="openModalShowImages(show, merchent.images)" -->
+                                    <img class="merchentImage" src="{{manageItem.image || ''}}" />
+                                </td>
+                                <td>{{manageItem.isreturn || '-'}}</td>
+                                <td>{{manageItem.dim || '-'}}</td>
+                                <td>{{manageItem.weight || '-'}}</td>
+                                <td>{{manageItem.manu_nm || '-'}}</td>
+                                <td>{{manageItem.brand || '-'}}</td>
+                                <td>{{manageItem.sales_info || '-'}}</td>
+                                <td>{{manageItem.sell_price || '-'}}</td>
+                                <td>{{manageItem.account || '-'}}</td>
+                                <td>{{manageItem.descri || '-'}}</td>
+                                <td>{{manageItem.purchase || '-'}}</td>
+                                <td>{{manageItem.purchase_price || '-'}}</td>
+                                <td>{{manageItem.account2 || '-'}}</td>
+                                <td>{{manageItem.descri_2 || '-'}}</td>
+                                <td>{{manageItem.track_in || '-'}}</td>
+                                <td>{{manageItem.account3 || '-'}}</td>
+                                <td>{{manageItem.opening_stock || '-'}}</td>
+                                <td>{{manageItem.opening_stock_val || '-'}}</td>
+                                <td>{{manageItem.reorder || '-'}}</td>
+                                <td>{{manageItem.pre_vender_nm || '-'}}</td>
+                                <td style="padding: 0.2rem;" title="view"> <img src='../../assets/img/viewData.png'  (click)="manageItemView(view,manageItem._id)" class="icon-search" /></td>
+                                <td style="padding: 0.2rem;" title="Edit"> <img src='../../assets/img/edit.png' (click)="manageItemEditClick(edit,manageItem._id)" class="icon-search" /></td>
+                                <td style="padding: 0.2rem;" title="Remove"><img src='../../assets/img/remove.png' (click)="remove($event)"  class="icon-search" /></td>  
+                            </tr>
+                        </tbody>
+                    </table>
+                    </div>
+                </div>
+                </div>
+            </div>    
+            </div>
+        </div>
+        </section>
+        
+        <!-- add Forms Section-->
+        <ng-template #add> 
+            <div class="container-fluid">
+                <div class="row">            
+                <!-- Form Elements -->
+                <div class="col-lg-12">
+                    <div class="card">           
+                    <div class="card-header d-flex align-items-center  model-close">
+                        <h3 class="h4">New Item Form</h3>
+                        <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <form method="post" class="form-validate"  [formGroup]="ManageItemInterForm" (ngSubmit)="onSubmit()">
+                            <div class="line" style="margin: 9px 0;"></div>
+    
+                            <div class="form-group row" >
+                                <label class="col-sm-3 form-control-label">Type</label>
+                                <div class="col-sm-5" >
+                                    <div class="col-xl-10" style="display: flex;">
+                                        <div class="col-sm-5">
+                                            <div class="i-checks">
+                                                <input id="typeValue" type="radio" value="Goods" formControlName="typeValue"
+                                                 [ngClass]="{ 'is-invalid': submitted && fval.typeValue.errors }" [(ngModel)]="insertManageItem.type"  class="radio-template">
+                                                <label for="radioCustom1">Goods</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-5">
+                                            <div class="i-checks">
+                                                <input id="typeValue" type="radio" value="Service" formControlName="typeValue"
+                                                 [ngClass]="{ 'is-invalid': submitted && fval.typeValue.errors }" [(ngModel)]="insertManageItem.type"  class="radio-template">
+                                                <label for="radioCustom2">Service </label>
+                                            </div>  
+                                        </div>  
+                                    </div>
+                                    <div *ngIf="submitted && fval.typeValue.errors" class="invalid-feedback" style="display: block;">
+                                        <div *ngIf="fval.typeValue.errors.required">Please select either type</div>
+                                    </div> 
+                                </div>
+                            </div>
+    
+                            <div class="line" style="margin: 9px 0;"></div>
+                            
+                            <div class="form-group row">
+                                <label class="col-sm-3 form-control-label">Full Name</label>
+                                <div class="col-sm-5">
+                                    <input type="text" formControlName="name"  name="dimension" 
+                                    [ngClass]="{ 'is-invalid': submitted && fval.name.errors }" 
+                                    class="form-control" [(ngModel)]="insertManageItem.name">
+                                    <div *ngIf="submitted && fval.name.errors" class="invalid-feedback">
+                                        <div *ngIf="fval.name.errors.required">Full Name is required.</div>
+                                    </div>
+                                </div>                                
+                            </div>
+    
+                            <div class="line" style="margin: 9px 0;"></div>
+    
+                            <div class="form-group row">
+                                <label class="col-sm-3 form-control-label">Unit</label>
+                                <div class="col-sm-9">
+                                    <div class="row">                                                       
+                                        <div class="col-md-5">                                        
+                                            <select class="form-control mb-3" formControlName="unit" 
+                                                (change)="onChangeUnit($event)"
+                                                [ngClass]="{ 'is-invalid': submitted && fval.unit.errors }">
+                                                <option value=""><---Select Unit---></option>
+                                                <option *ngFor="let unit of units">{{unit}}</option>
+                                            </select>
+                                            <div *ngIf="submitted && fval.unit.invalid" class="invalid-feedback">
+                                                <div *ngIf="fval.unit.errors.required">please select unit</div>
+                                            </div>
+                                        </div> 
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="line" style="margin: 9px 0;"></div>
+    
+                            <div class="form-group row">
+                                <label for="fileInput" class="col-sm-3 form-control-label">Image</label>
+                                <div class="col-sm-9">
+                                <input id="fileInput" type="file" name="image" class="form-control-file">
+                                </div>
+                            </div>
+    
+                            <div class="line" style="margin: 9px 0;"></div>
+    
+                            <div class="form-group row" >
+                                <label class="col-sm-3 form-control-label">Returnable Item</label>
+                                <div class="col-sm-5" >
+                                    <div class="col-xl-10" style="display: flex;">
+                                        <div class="col-sm-5">
+                                            <div class="i-checks">
+                                                <input id="ritem" type="radio" value="true" formControlName="ritem" [(ngModel)]="insertManageItem.isreturn" [ngClass]="{ 'is-invalid': submitted && fval.ritem.errors }"  class="radio-template">
+                                                <label for="radioCustom1">Yes</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-5">
+                                            <div class="i-checks">
+                                                <input id="ritem" type="radio" value="false" formControlName="ritem" [(ngModel)]="insertManageItem.isreturn" [ngClass]="{ 'is-invalid': submitted && fval.ritem.errors }"   class="radio-template">
+                                                <label for="radioCustom2">No</label>
+                                            </div>  
+                                        </div>  
+                                    </div>
+                                    <div *ngIf="submitted && fval.ritem.errors" class="invalid-feedback" style="display: block;">
+                                        <div *ngIf="fval.ritem.errors.required">Please select either Returnable Item.</div>
+                                    </div> 
+                                </div>
+                            </div>
+    
+                            <div class="line" style="margin: 9px 0;"></div>
+
+                            <div class="form-group row">
+                                <label class="col-sm-3 form-control-label">Assosiated  Items</label>
+                                <div class="col-sm-9">
+                                <div class="row">                                                       
+                                    <div class="col-md-5">
+                                        <select class="form-control mb-3" formControlName="assiciated" 
+                                            (change)="onChangeAssociated($event)"
+                                            [ngClass]="{ 'is-invalid': submitted && fval.unit.errors }">
+                                            <option ><---Select Account---></option>
+                                            <option value="Discount">Discount</option>
+                                            <option value="General income">General income</option>                           
+                                            <option value="Sales">Sales</option>                           
+                                            <option value="Interest Income">Interest Income</option>                           
+                                            <option value="Shipping Charges">Shipping Charges</option>                           
+                                            <option value="Late Fee Income">Late Fee Income</option>                           
+                                            <option value="Other charges">Other charges</option>
+                                        </select>
+                                        <div *ngIf="submitted && fval.assiciated.errors" class="invalid-feedback">
+                                            <div *ngIf="fval.assiciated.errors.required">Selecy any Account</div>
+                                        </div>
+                                    </div> 
+                                </div>
+                                </div>
+                            </div>
+    
+                            <div class="line" style="margin: 9px 0;"></div>
+
+
+                            <div class="form-group row">
+                                <label class="col-sm-3 form-control-label">Dimension(L,B,H)(CM)</label>
+                                <div class="col-sm-3">
+                                    <input type="text" formControlName="dimension"  name="dimension" 
+                                    [ngClass]="{ 'is-invalid': submitted && fval.dimension.errors }" 
+                                    class="form-control" [(ngModel)]="insertManageItem.dim">
+                                    <div *ngIf="submitted && fval.dimension.errors" class="invalid-feedback">
+                                        <div *ngIf="fval.dimension.errors.required">Dimension is required.</div>
+                                    </div>
+                                </div>                                
+                            </div>
+                            <div class="line" style="margin: 9px 0;"></div>
+    
+                            
+                            <div class="form-group row">
+                                <label class="col-sm-3 form-control-label">Weight(Kg)</label>
+                                <div class="col-sm-3">
+                                    <input type="text" formControlName="weight"  name="weight" 
+                                    [ngClass]="{ 'is-invalid': submitted && fval.weight.errors }" 
+                                    class="form-control" [(ngModel)]="insertManageItem.weight">
+                                    <div *ngIf="submitted && fval.weight.errors" class="invalid-feedback">
+                                        <div *ngIf="fval.weight.errors.required">Weight is required.</div>
+                                    </div>
+                                </div>                                
+                            </div>
+    
+                            <div class="line" style="margin: 9px 0;"></div>
+    
+                            <div class="form-group row">
+                                <label class="col-sm-3 form-control-label">Manufacturer</label>
+                                <div class="col-sm-5">
+                                    <input type="text" formControlName="manuf"  name="manufacturer"   [(ngModel)]="insertManageItem.manu_nm" [ngClass]="{ 'is-invalid': submitted && fval.manuf.errors }" class="form-control">
+                                    <div *ngIf="submitted && fval.manuf.errors" class="invalid-feedback">
+                                        <div *ngIf="fval.manuf.errors.required">Manufacturer is required.</div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            
+                            <div class="line" style="margin: 9px 0;"></div>
+    
+                            <div class="form-group row">
+                                <label class="col-sm-3 form-control-label">Brand</label>
+                                <div class="col-sm-3">
+                                    <input type="text" formControlName="brand" name="brand" [(ngModel)]="insertManageItem.brand" [ngClass]="{ 'is-invalid': submitted && fval.brand.errors }" class="form-control">
+                                    <div *ngIf="submitted && fval.brand.errors" class="invalid-feedback">
+                                        <div *ngIf="fval.brand.errors.required">Brand is required.</div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+    
+                            <div class="line" style="margin: 9px 0;"></div>
+    
+                            <div class="form-group row" >
+                                <label class="col-sm-3 form-control-label">Sales information</label>
+                                <div class="col-sm-5" >
+                                    <div class="col-xl-10" style="display: flex;">
+                                        <div class="col-sm-5">
+                                            <div class="i-checks">
+                                                <input id="saleInfo" type="radio" value="true" [(ngModel)]="insertManageItem.sales_info" formControlName="saleInfo" [ngClass]="{ 'is-invalid': submitted && fval.saleInfo.errors }" class="radio-template">
+                                                <label for="radioCustom1">Yes</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-5">
+                                            <div class="i-checks">
+                                                <input id="saleInfo" type="radio" value="false" [(ngModel)]="insertManageItem.sales_info" formControlName="saleInfo" [ngClass]="{ 'is-invalid': submitted && fval.saleInfo.errors }" class="radio-template">
+                                                <label for="radioCustom2">No</label>
+                                            </div>  
+                                        </div>  
+                                    </div>
+                                    <div *ngIf="submitted && fval.saleInfo.errors" class="invalid-feedback" style="display: block;">
+                                        <div *ngIf="fval.saleInfo.errors.required">Please select either Sales information.</div>
+                                    </div> 
+                                </div>
+                            </div>
+    
+                            <div class="line" style="margin: 9px 0;"></div>
+    
+                            <div class="form-group row">
+                                <label class="col-sm-3 form-control-label">Selling Price(INR)</label>
+                                <div class="col-sm-2">
+                                    <input type="text" formControlName="sellPrice" name='sallingPrice' [(ngModel)]="insertManageItem.sell_price" [ngClass]="{ 'is-invalid': submitted && fval.sellPrice.errors }" class="form-control">
+                                    <div *ngIf="submitted && fval.sellPrice.errors" class="invalid-feedback">
+                                        <div *ngIf="fval.sellPrice.errors.required">please enter Selling Price</div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+    
+                            <div class="line" style="margin: 9px 0;"></div>                    
+                            <div class="form-group row">
+                                <label class="col-sm-3 form-control-label">Account</label>
+                                <div class="col-sm-9">
+                                <div class="row">                                                       
+                                    <div class="col-md-5">
+                                        <select class="form-control mb-3" formControlName="account1" 
+                                            (change)="onChangeAccountF($event)"
+                                            [ngClass]="{ 'is-invalid': submitted && fval.unit.errors }">
+                                            <option ><---Select Account---></option>
+                                            <option value="Discount">Discount</option>
+                                            <option value="General income">General income</option>                           
+                                            <option value="Sales">Sales</option>                           
+                                            <option value="Interest Income">Interest Income</option>                           
+                                            <option value="Shipping Charges">Shipping Charges</option>                           
+                                            <option value="Late Fee Income">Late Fee Income</option>                           
+                                            <option value="Other charges">Other charges</option>
+                                        </select>
+                                        <div *ngIf="submitted && fval.account1.errors" class="invalid-feedback">
+                                            <div *ngIf="fval.account1.errors.required">Selecy any Account</div>
+                                        </div>
+                                    </div> 
+                                </div>
+                                </div>
+                            </div>
+    
+                            <div class="line" style="margin: 9px 0;"></div>
+    
+                            <div class="form-group row">
+                                <label class="col-sm-3 form-control-label">Description</label>
+                                <div class="col-sm-6">
+                                    <input type="text" formControlName="descrip1" name="description" class="form-control" [(ngModel)]="insertManageItem.descri" [ngClass]="{ 'is-invalid': submitted && fval.descrip1.errors }">
+                                    <div *ngIf="submitted && fval.descrip1.errors" class="invalid-feedback">
+                                        <div *ngIf="fval.descrip1.errors.required">Description is required.</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="line" style="margin: 9px 0;"></div>
+    
+                            <div class="form-group row" >
+                                <label class="col-sm-3 form-control-label">Purchase Information</label>
+                                <div class="col-sm-5" >
+                                    <div class="col-xl-10" style="display: flex;">
+                                        <div class="col-sm-5">
+                                            <div class="i-checks">
+                                                <input id="purInfo1" type="radio" value="true" formControlName="purInfo1" [(ngModel)]="insertManageItem.purchase" [ngClass]="{ 'is-invalid': submitted && fval.purInfo1.errors }" class="radio-template">
+                                                <label for="radioCustom1">Yes</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-5">
+                                            <div class="i-checks">
+                                                <input id="purInfo1" type="radio" value="false" formControlName="purInfo1" [(ngModel)]="insertManageItem.purchase" [ngClass]="{ 'is-invalid': submitted && fval.purInfo1.errors }"  class="radio-template">
+                                                <label for="radioCustom2">No</label>
+                                            </div>  
+                                        </div>  
+                                    </div>
+                                    <div *ngIf="submitted && fval.purInfo1.errors" class="invalid-feedback" style="display: block;">
+                                        <div *ngIf="fval.purInfo1.errors.required">Please select either Purchase Information</div>
+                                    </div> 
+                                </div>
+                            </div>
+    
+                            <div class="line" style="margin: 9px 0;"></div>
+    
+                            <div class="form-group row">
+                                <label class="col-sm-3 form-control-label">Purchase Price (INR)</label>
+                                <div class="col-sm-2">
+                                    <input type="text" formControlName="purPrice" name="purchasePrice" [(ngModel)]="insertManageItem.purchase_price"  [ngClass]="{ 'is-invalid': submitted && fval.purPrice.errors }" class="form-control">
+                                    <div *ngIf="submitted && fval.purPrice.errors" class="invalid-feedback">
+                                        <div *ngIf="fval.purPrice.errors.required">Purchase Price is required.</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="line" style="margin: 9px 0;"></div>      
+    
+                            <div class="form-group row">
+                                <label class="col-sm-3 form-control-label">Account</label>
+                                <div class="col-sm-9">
+                                <div class="row">                                                       
+                                    <div class="col-md-5">
+                                        <select class="form-control mb-3" formControlName="account2"  [ngClass]="{ 'is-invalid': submitted && fval.account2.errors }" (change)="onChangeAccountS($event)">
+                                            <option ><---Select Account---></option>
+                                            <option value="Cost of Goods Sold">Cost of Goods Sold</option>
+                                            <option value="Advertising">Advertising</option>
+                                            <option value="Automobile Expense">Automobile Expense</option>
+                                            <option value="Bad Debt">Bad Debt</option>
+                                            <option value="Parking">Parking</option>
+                                            <option value="Food">Food</option>
+                                            <option value="Bank fees">Bank fees</option>
+                                            <option value="Travel">Travel</option>
+                                            <option value="Labour">Labour</option>
+                                            <option value="Materials">Materials</option>
+                                        </select>
+                                        <div *ngIf="submitted && fval.account2.errors" class="invalid-feedback">
+                                            <div *ngIf="fval.account2.errors.required">Selecy any Account</div>
+                                        </div>
+                                    </div> 
+                                </div>
+                                </div>
+                            </div>
+    
+                            <div class="line" style="margin: 9px 0;"></div>
+    
+                            <div class="form-group row">
+                                <label class="col-sm-3 form-control-label">Description</label>
+                                <div class="col-sm-6">
+                                    <input type="text" formControlName="descrip2" name="description" class="form-control" [(ngModel)]="insertManageItem.descri_2" [ngClass]="{ 'is-invalid': submitted && fval.descrip2.errors }">
+                                    <div *ngIf="submitted && fval.descrip2.errors" class="invalid-feedback">
+                                        <div *ngIf="fval.descrip2.errors.required">Description is required.</div>
+                                    </div>
+                                </div>
+                            </div>
+    
+                            <div class="line" style="margin: 9px 0;"></div>
+    
+                                <div class="form-group row" >
+                                    <label class="col-sm-3 form-control-label">Track Inventory</label>
+                                    <div class="col-sm-5" >
+                                        <div class="col-xl-10" style="display: flex;">
+                                            <div class="col-sm-5">
+                                                <div class="i-checks">
+                                                    <input id="trackIn2" type="radio" value="true" formControlName="trackIn2" [(ngModel)]="insertManageItem.track_in" [ngClass]="{ 'is-invalid': submitted && fval.trackIn2.errors }" class="radio-template">
+                                                    <label for="radioCustom1">Yes</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-5">
+                                                <div class="i-checks">
+                                                    <input id="trackIn2" type="radio" value="false" formControlName="trackIn2" [(ngModel)]="insertManageItem.track_in" [ngClass]="{ 'is-invalid': submitted && fval.trackIn2.errors }"  class="radio-template">
+                                                    <label for="radioCustom2">No</label>
+                                                </div>  
+                                            </div>  
+                                        </div>
+                                        <div *ngIf="submitted && fval.trackIn2.errors" class="invalid-feedback" style="display: block;">
+                                            <div *ngIf="fval.trackIn2.errors.required">Please select either Track Inventory</div>
+                                        </div> 
+                                    </div>
+                                </div>
+    
+                                <div class="line" style="margin: 9px 0;"></div>                    
+                            <div class="form-group row">
+                                <label class="col-sm-3 form-control-label">Account</label>
+                                <div class="col-sm-9">
+                                <div class="row">                                                       
+                                    <div class="col-md-5">
+                                        <select class="form-control mb-3" formControlName="account3" [ngClass]="{ 'is-invalid': submitted && fval.account3.errors }" (change)="onChangeAccountT($event)">
+                                            <option ><---Select Account---></option>
+                                            <option value="Inventory Asset">Inventory Asset</option>
+                                            <option value="Finished Goods">Finished Goods</option>
+                                            <option value="Work in progress">Work in progress</option>
+                                        </select>         
+                                        <div *ngIf="submitted && fval.account3.errors" class="invalid-feedback">
+                                            <div *ngIf="fval.account3.errors.required">Selecy any Account</div>
+                                        </div>                               
+                                    </div> 
+                                </div>
+                                </div>
+                            </div>
+    
+                            <div class="line" style="margin: 9px 0;"></div>
+    
+                            <div class="form-group row">
+                                <label class="col-sm-3 form-control-label">Opening Stock</label>
+                                <div class="col-sm-2">
+                                    <input type="text" formControlName="openStock"[(ngModel)]="insertManageItem.opening_stock"  [ngClass]="{ 'is-invalid': submitted && fval.openStock.errors }" name="openStock" class="form-control">
+                                    <div *ngIf="submitted && fval.openStock.errors" class="invalid-feedback">
+                                        <div *ngIf="fval.openStock.errors.required">Opening Stock is required.</div>
+                                    </div> 
+                                </div>
+                            </div>
+    
+                            <div class="line" style="margin: 9px 0;"></div>
+    
+                            <div class="form-group row">
+                                <label class="col-sm-3 form-control-label">Opening Stock Value(per unit)</label>
+                                <div class="col-sm-2">
+                                    <input type="text" formControlName="OSValUnit" name="openStockValue" [(ngModel)]="insertManageItem.opening_stock_val" [ngClass]="{ 'is-invalid': submitted && fval.OSValUnit.errors }" class="form-control">
+                                    <div *ngIf="submitted && fval.OSValUnit.errors" class="invalid-feedback">
+                                        <div *ngIf="fval.OSValUnit.errors.required">Opening Stock is required.</div>
+                                    </div>
+                                </div>
+                            </div>
+    
+                            <div class="line" style="margin: 9px 0;"></div>
+    
+                            <div class="form-group row">
+                                <label class="col-sm-3 form-control-label">Reorder Level</label>
+                                <div class="col-sm-4">
+                                    <input type="text" formControlName="recLvl" [(ngModel)]="insertManageItem.reorder" [ngClass]="{ 'is-invalid': submitted && fval.recLvl.errors }"  name="reorderLvl" class="form-control">
+                                    <div *ngIf="submitted && fval.recLvl.errors" class="invalid-feedback">
+                                        <div *ngIf="fval.recLvl.errors.required">Opening Stock is required.</div>
+                                    </div>
+                                </div>
+                            </div>
+    
+                            <div class="line" style="margin: 9px 0;"></div>
+    
+                            <div class="form-group row">
+                                <label class="col-sm-3 form-control-label">Preffered vendor </label>
+                                <div class="col-sm-4">
+                                    <input type="text" formControlName="preVendor" [(ngModel)]="insertManageItem.pre_vender_nm" [ngClass]="{ 'is-invalid': submitted && fval.preVendor.errors }"  name="reorderLvl" class="form-control">
+                                    <div *ngIf="submitted && fval.preVendor.errors" class="invalid-feedback">
+                                        <div *ngIf="fval.preVendor.errors.required">Preffered vendor is required.</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="line" style="margin: 9px 0;"></div>
+    
+                            <div class="form-group row">
+                                <div class="col-sm-4 offset-sm-3">
+                                    <button type="submit" class="btn btn-secondary" (click)="action('normal',$event)">Cancel</button>
+                                    <button type="submit"  class="btn btn-primary">Save changes</button>
+                                </div>
+                            </div>
+                        </form>
+                        
+                        
+                    </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </ng-template>
+       
+        <!-- Edit manage Item Section-->
+        <ng-template #edit> 
+            <div class="container-fluid">
+                <div class="row">            
+                <!-- Form Elements -->
+                <div class="col-lg-12">
+                    <div class="card">           
+                    <div class="card-header d-flex align-items-center">
+                        <h3 class="h4">Edit Manage Item Details</h3>
+                    </div>
+                    <div class="card-body">
+                        <form method="post" class="form-validate"  [formGroup]="ManageItemInterForm" (ngSubmit)="onSubmit()">
+                            <div class="line" style="margin: 9px 0;"></div>
+                            <div class="form-group row">
+                                <label class="col-sm-3 form-control-label">Type</label>
+                                <div class="col-sm-1">
+                                    <div class="i-checks">
+                                        <input id="radioCustom1" type="radio" value="Goods"
+                                            formControlName="typeValue"  [ngClass]="{ 'is-invalid': submitted && fval.typeValue.errors }" 
+                                            class="radio-template">
+                                        <label for="radioCustom1">Goods</label>
+                                    </div>
+                                </div>
+                                <div class="col-sm-1">
+                                    <div class="i-checks">
+                                        <input id="radioCustom2" type="radio" 
+                                        value="Service" formControlName="typeValue" [ngClass]="{ 'is-invalid': submitted && fval.typeValue.errors }"  class="radio-template">
+                                        <label for="radioCustom2">Service</label>
+                                    </div>  
+                                    <div *ngIf="submitted && fval.typeValue.errors" class="invalid-feedback">
+                                        <div *ngIf="fval.typeValue.errors.required">
+                                            please select any one type.
+                                        </div>
+                                    </div>
+                                </div> 
+                                                                                    
+                            </div>
+    
+                            <div class="line" style="margin: 9px 0;"></div>
+                            
+                            <div class="form-group row">
+                                <label class="col-sm-3 form-control-label">Full Name</label>
+                                <div class="col-sm-5">
+                                    <input type="text" formControlName="name"  name="dimension" 
+                                    [ngClass]="{ 'is-invalid': submitted && fval.name.errors }" 
+                                    class="form-control" value="{{manageItemEditData.name}}">
+                                    <div *ngIf="submitted && fval.name.errors" class="invalid-feedback">
+                                        <div *ngIf="fval.name.errors.required">Full Name is required.</div>
+                                    </div>
+                                </div>                                
+                            </div>
+    
+                            <div class="line" style="margin: 9px 0;"></div>
+    
+                            <div class="form-group row">
+                                <label class="col-sm-3 form-control-label">Unit</label>
+                                <div class="col-sm-9">
+                                    <div class="row">                                                       
+                                        <div class="col-md-5">                                        
+                                            <select class="form-control mb-3" formControlName="unit" 
+                                                (change)="onChangeUnit($event)"
+                                                [ngClass]="{ 'is-invalid': submitted && fval.unit.errors }">
+                                                <option value="{{manageItemEditData.unit}}" selected>{{manageItemEditData.unit}}</option>
+                                                <option value="unit" *ngFor="let unit of units">{{unit}}</option>
+                                            </select>
+                                            <div *ngIf="submitted && fval.unit.invalid" class="invalid-feedback">
+                                                <div *ngIf="fval.unit.errors.required">please select unit</div>
+                                            </div>
+                                        </div> 
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="line" style="margin: 9px 0;"></div>
+    
+                            <div class="form-group row">
+                                <label for="fileInput" class="col-sm-3 form-control-label">Image</label>
+                                <div class="col-sm-9">
+                                <input id="fileInput" type="file" name="image" class="form-control-file">
+                                </div>
+                            </div>
+    
+                            <div class="line" style="margin: 9px 0;"></div>
+    
+                            <div class="form-group row">
+                                <label class="col-sm-3 form-control-label">Returnable Item</label>
+                                <div class="col-sm-1">
+                                    <div class="i-checks">
+                                        <input id="radioCustom1" type="radio" value="yes" class="radio-template">
+                                        <label for="radioCustom1">Yes</label>
+                                    </div>
+                                </div>
+                                <div class="col-sm-1">
+                                    <div class="i-checks">
+                                        <input id="radioCustom2" type="radio" checked="" value="no" class="radio-template">
+                                        <label for="radioCustom2">No</label>
+                                    </div>  
+                                </div>                                                   
+                            </div>
+    
+                            <div class="line" style="margin: 9px 0;"></div>
+                            
+                            <div class="form-group row">
+                                <label class="col-sm-3 form-control-label">Dimension(L,B,H)(CM)</label>
+                                <div class="col-sm-3">
+                                    <input type="text" formControlName="dimension"  name="dimension" 
+                                    [ngClass]="{ 'is-invalid': submitted && fval.dimension.errors }" 
+                                    class="form-control" value="{{manageItemEditData.dim}}">
+                                    <div *ngIf="submitted && fval.dimension.errors" class="invalid-feedback">
+                                        <div *ngIf="fval.dimension.errors.required">Dimension is required.</div>
+                                    </div>
+                                </div>                                
+                            </div>
+                            <div class="line" style="margin: 9px 0;"></div>
+    
+                            
+                            <div class="form-group row">
+                                <label class="col-sm-3 form-control-label">Weight(Kg)</label>
+                                <div class="col-sm-3">
+                                    <input type="text" formControlName="weight"  name="weight" 
+                                    [ngClass]="{ 'is-invalid': submitted && fval.weight.errors }" 
+                                    class="form-control" value="{{manageItemEditData.weight}}">
+                                    <div *ngIf="submitted && fval.weight.errors" class="invalid-feedback">
+                                        <div *ngIf="fval.weight.errors.required">Weight is required.</div>
+                                    </div>
+                                </div>                                
+                            </div>
+    
+                            <div class="line" style="margin: 9px 0;"></div>
+    
+                            <div class="form-group row">
+                                <label class="col-sm-3 form-control-label">Manufacturer</label>
+                                <div class="col-sm-5">
+                                    <input type="text" formControlName="manuf"  name="manufacturer" value="{{manageItemEditData.manu_nm}}" [ngClass]="{ 'is-invalid': submitted && fval.manuf.errors }" class="form-control">
+                                    <div *ngIf="submitted && fval.manuf.errors" class="invalid-feedback">
+                                        <div *ngIf="fval.manuf.errors.required">Manufacturer is required.</div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            
+                            <div class="line" style="margin: 9px 0;"></div>
+    
+                            <div class="form-group row">
+                                <label class="col-sm-3 form-control-label">Brand </label>
+                                <div class="col-sm-3">
+                                    <input type="text" formControlName="brand" name="brand" value="{{manageItemEditData.brand}}" [ngClass]="{ 'is-invalid': submitted && fval.brand.errors }" class="form-control">
+                                    <div *ngIf="submitted && fval.brand.errors" class="invalid-feedback">
+                                        <div *ngIf="fval.brand.errors.required">Brand is required.</div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+    
+                            <div class="line" style="margin: 9px 0;"></div>
+    
+                            <div class="form-group row">
+                                <label class="col-sm-3 form-control-label">Sales information</label>
+                                <div class="col-sm-1">
+                                    <div class="i-checks">
+                                        <input id="radioCustom1" type="radio" value="Yes"   class="radio-template">
+                                        <label for="radioCustom1">Yes</label>
+                                    </div>
+                                </div>
+                                <div class="col-sm-1">
+                                    <div class="i-checks">
+                                        <input id="radioCustom2" type="radio" checked value="No" class="radio-template">
+                                        <label for="radioCustom2">No</label>
+                                    </div>  
+                                </div>                                                   
+                            </div>
+                            <div class="line" style="margin: 9px 0;"></div>
+    
+                            <div class="form-group row">
+                                <label class="col-sm-3 form-control-label">Selling Price(INR)</label>
+                                <div class="col-sm-2">
+                                    <input type="text" formControlName="sellPrice" name='sallingPrice' value="{{manageItemEditData.sell_price}}" [ngClass]="{ 'is-invalid': submitted && fval.sellPrice.errors }" class="form-control">
+                                    <div *ngIf="submitted && fval.sellPrice.errors" class="invalid-feedback">
+                                        <div *ngIf="fval.sellPrice.errors.required">please enter Selling Price</div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+    
+                            <div class="line" style="margin: 9px 0;"></div>                    
+                            <div class="form-group row">
+                                <label class="col-sm-3 form-control-label">Account</label>
+                                <div class="col-sm-9">
+                                <div class="row">                                                       
+                                    <div class="col-md-5">
+                                        <select class="form-control mb-3" formControlName="account1" 
+                                            (change)="onChangeAccountF($event)"
+                                            [ngClass]="{ 'is-invalid': submitted && fval.account1.errors }">
+                                            <option value="{{manageItemEditData.account}}" selected>{{manageItemEditData.account}}</option>
+                                            <option value="Discount">Discount</option>
+                                            <option value="General income">General income</option>                           
+                                            <option value="Sales">Sales</option>                           
+                                            <option value="Interest Income">Interest Income</option>                           
+                                            <option value="Shipping Charges">Shipping Charges</option>                           
+                                            <option value="Late Fee Income">Late Fee Income</option>                           
+                                            <option value="Other charges">Other charges</option>
+                                        </select>
+                                        <div *ngIf="submitted && fval.account1.errors" class="invalid-feedback">
+                                            <div *ngIf="fval.account1.errors.required">Selecy any Account</div>
+                                        </div>
+                                    </div> 
+                                </div>
+                                </div>
+                            </div>
+    
+                            <div class="line" style="margin: 9px 0;"></div>
+    
+                            <div class="form-group row">
+                                <label class="col-sm-3 form-control-label">Description</label>
+                                <div class="col-sm-6">
+                                    <input type="text" formControlName="descrip1" name="description" value="{{manageItemEditData.descri}}" class="form-control" [ngClass]="{ 'is-invalid': submitted && fval.descrip1.errors }">
+                                    <div *ngIf="submitted && fval.descrip1.errors" class="invalid-feedback">
+                                        <div *ngIf="fval.descrip1.errors.required">Description is required.</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="line" style="margin: 9px 0;"></div>
+    
+                            <div class="form-group row">
+                                <label class="col-sm-3 form-control-label">Purchase Information</label>
+                                <div class="col-sm-1">
+                                    <div class="i-checks">
+                                        <input id="radioCustom1" type="radio" value="Yes"  class="radio-template">
+                                        <label for="radioCustom1">Yes</label>
+                                    </div>
+                                </div>
+                                <div class="col-sm-1">
+                                    <div class="i-checks">
+                                        <input id="radioCustom2" type="radio" checked value="No"  class="radio-template">
+                                        <label for="radioCustom2">No</label>
+                                    </div>  
+                                </div>                                                   
+                            </div>
+    
+                            <div class="line" style="margin: 9px 0;"></div>
+    
+                            <div class="form-group row">
+                                <label class="col-sm-3 form-control-label">Purchase Price (INR)</label>
+                                <div class="col-sm-2">
+                                    <input type="text" formControlName="purPrice" name="purchasePrice" value="{{manageItemEditData.purchase_price}}" [ngClass]="{ 'is-invalid': submitted && fval.purPrice.errors }" class="form-control">
+                                    <div *ngIf="submitted && fval.purPrice.errors" class="invalid-feedback">
+                                        <div *ngIf="fval.purPrice.errors.required">Purchase Price is required.</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="line" style="margin: 9px 0;"></div>      
+    
+                            <div class="form-group row">
+                                <label class="col-sm-3 form-control-label">Account</label>
+                                <div class="col-sm-9">
+                                <div class="row">                                                       
+                                    <div class="col-md-5">
+                                        <select class="form-control mb-3" formControlName="account2" [ngClass]="{ 'is-invalid': submitted && fval.account2.errors }" (change)="onChangeAccountS($event)">
+                                            <option value="{{manageItemEditData.account2}}" selected>{{manageItemEditData.account2}}</option>
+                                            <option value="Cost of Goods Sold">Cost of Goods Sold</option>
+                                            <option value="Advertising">Advertising</option>
+                                            <option value="Automobile Expense">Automobile Expense</option>
+                                            <option value="Bad Debt">Bad Debt</option>
+                                            <option value="Parking">Parking</option>
+                                            <option value="Food">Food</option>
+                                            <option value="Bank fees">Bank fees</option>
+                                            <option value="Travel">Travel</option>
+                                            <option value="Labour">Labour</option>
+                                            <option value="Materials">Materials</option>
+                                        </select>
+                                        <div *ngIf="submitted && fval.account2.errors" class="invalid-feedback">
+                                            <div *ngIf="fval.account2.errors.required">Selecy any Account</div>
+                                        </div>
+                                    </div> 
+                                </div>
+                                </div>
+                            </div>
+    
+                            <div class="line" style="margin: 9px 0;"></div>
+    
+                            <div class="form-group row">
+                                <label class="col-sm-3 form-control-label">Description</label>
+                                <div class="col-sm-6">
+                                    <input type="text" formControlName="descrip2" name="description" class="form-control" value="{{manageItemEditData.descri_2}}" [ngClass]="{ 'is-invalid': submitted && fval.descrip2.errors }">
+                                    <div *ngIf="submitted && fval.descrip2.errors" class="invalid-feedback">
+                                        <div *ngIf="fval.descrip2.errors.required">Description is required.</div>
+                                    </div>
+                                </div>
+                            </div>
+    
+                            <div class="line" style="margin: 9px 0;"></div>
+    
+                            <div class="form-group row">
+                                <label class="col-sm-3 form-control-label">Track Inventory</label>
+                                <div class="col-sm-1">
+                                    <div class="i-checks">
+                                        <input id="radioCustom1" type="radio" value="Yes"   class="radio-template">
+                                        <label for="radioCustom1">Yes</label>
+                                    </div>
+                                </div>
+                                <div class="col-sm-1">
+                                    <div class="i-checks">
+                                        <input id="radioCustom2" type="radio" checked value="No"   class="radio-template">
+                                        <label for="radioCustom2">No</label>
+                                    </div>  
+                                </div>                                                   
+                            </div>
+    
+                            <div class="line" style="margin: 9px 0;"></div>                    
+                            <div class="form-group row">
+                                <label class="col-sm-3 form-control-label">Account</label>
+                                <div class="col-sm-9">
+                                <div class="row">                                                       
+                                    <div class="col-md-5">
+                                        <select class="form-control mb-3" formControlName="account3" [ngClass]="{ 'is-invalid': submitted && fval.account3.errors }" (change)="onChangeAccountT($event)">
+                                            <option value="manageItemEditData.account3" selected>{{manageItemEditData.account3}}</option>
+                                            <option value="Inventory Asset">Inventory Asset</option>
+                                            <option value="Finished Goods">Finished Goods</option>
+                                            <option value="Work in progress">Work in progress</option>
+                                        </select>         
+                                        <div *ngIf="submitted && fval.account3.errors" class="invalid-feedback">
+                                            <div *ngIf="fval.account3.errors.required">Selecy any Account</div>
+                                        </div>                               
+                                    </div> 
+                                </div>
+                                </div>
+                            </div>
+    
+                            <div class="line" style="margin: 9px 0;"></div>
+    
+                            <div class="form-group row">
+                                <label class="col-sm-3 form-control-label">Opening Stock</label>
+                                <div class="col-sm-2">
+                                    <input type="text" formControlName="openStock" value="{{manageItemEditData.opening_stock}}" [ngClass]="{ 'is-invalid': submitted && fval.openStock.errors }" name="openStock" class="form-control">
+                                    <div *ngIf="submitted && fval.openStock.errors" class="invalid-feedback">
+                                        <div *ngIf="fval.openStock.errors.required">Opening Stock is required.</div>
+                                    </div> 
+                                </div>
+                            </div>
+    
+                            <div class="line" style="margin: 9px 0;"></div>
+    
+                            <div class="form-group row">
+                                <label class="col-sm-3 form-control-label">Opening Stock Value(per unit)</label>
+                                <div class="col-sm-2">
+                                    <input type="text" formControlName="OSValUnit" name="openStockValue" value="{{manageItemEditData.opening_stock_val}}" [ngClass]="{ 'is-invalid': submitted && fval.OSValUnit.errors }" class="form-control">
+                                    <div *ngIf="submitted && fval.OSValUnit.errors" class="invalid-feedback">
+                                        <div *ngIf="fval.OSValUnit.errors.required">Opening Stock is required.</div>
+                                    </div>
+                                </div>
+                            </div>
+    
+                            <div class="line" style="margin: 9px 0;"></div>
+    
+                            <div class="form-group row">
+                                <label class="col-sm-3 form-control-label">Reorder Level</label>
+                                <div class="col-sm-4">
+                                    <input type="text" formControlName="recLvl" value="{{manageItemEditData.reorder}}" [ngClass]="{ 'is-invalid': submitted && fval.recLvl.errors }"  name="reorderLvl" class="form-control">
+                                    <div *ngIf="submitted && fval.recLvl.errors" class="invalid-feedback">
+                                        <div *ngIf="fval.recLvl.errors.required">Opening Stock is required.</div>
+                                    </div>
+                                </div>
+                            </div>
+    
+                            <div class="line" style="margin: 9px 0;"></div>
+    
+                            <div class="form-group row">
+                                <div class="col-sm-4 offset-sm-3">
+                                    <button type="submit" class="btn btn-secondary" (click)="action('normal',$event)">Cancel</button>
+                                    <button type="submit"  class="btn btn-primary">Save changes</button>
+                                </div>
+                            </div>
+                        </form>
+                        
+                        
+                    </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </ng-template>
+        <!-- footer Header-->  
+        <app-footer></app-footer>
+        </div>
+    </div>
+    </div>
+    
+    
+    
