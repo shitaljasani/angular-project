@@ -23,7 +23,7 @@
     "@angular/router": "~8.2.14",
     "@types/jquery": "^3.3.31",
     "angular-alert-module": "^2.0.3",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "ngx-bootstrap": "^5.2.0",
     "ngx-bootstrap-modal": "^2.0.1",
     "rxjs": "~6.4.0",
